@@ -13,5 +13,6 @@ class Contact extends Model
         'number',
         'name',
         'user_id',
+        'file_path',
     ];
 }

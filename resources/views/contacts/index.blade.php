@@ -13,7 +13,7 @@
             </x-primary-button>
 
             <x-modal name="add_contactForm" :show="$errors->contactCreation->isNotEmpty()">
-                <form method="post" action="{{ route('contacts.store') }}" class="p-6">
+                <form method="post" action="{{ route('contacts.store') }}" enctype="multipart/form-data" class="p-6">
                     @csrf
 
                     <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -50,6 +50,21 @@
                         <x-input-error :messages="$errors->contactCreation->get('contact_name')" class="mt-2" />
                     </div>
 
+                    <div class="mt-6">
+                        <x-input-label for="fileAttachment" value="{{ __('Contact Name') }}" class="sr-only" />
+
+                        <x-file-upload
+                            id="fileAttachment"
+                            name="fileAttachment"
+                            type="file"
+                            class="mt-1 block w-full"
+                            placeholder="{{ __('File attachment') }}"
+                            :is_invalid="$errors->contactCreation->has('fileAttachment')"
+                        />
+
+                        <x-input-error :messages="$errors->contactCreation->get('fileAttachment')" class="mt-2" />
+                    </div>
+
                     <div class="mt-6 flex justify-end">
                         <x-secondary-button x-on:click="$dispatch('close')">
                             {{ __('Cancel') }}
@@ -73,6 +88,7 @@
                             <tr>
                                 <th>{{ __("Contact Number") }}</th>
                                 <th>{{ __("Contact Name") }}</th>
+                                <th>{{ __("File attachment") }}</th>
                                 <th>{{ __("Action") }}</th>
                             </tr>
                         </thead>
@@ -81,6 +97,7 @@
                             <tr>
                                 <td>{{ $contact->number }}</td>
                                 <td>{{ $contact->name }}</td>
+                                <td><a href="{{asset('storage/'.$contact->file_path)}}">{{$contact->file_path}}</a></td>
                                 <td></td>
                             </tr>
                         @endforeach

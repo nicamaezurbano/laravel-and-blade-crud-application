@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\User;
 use App\Models\Contact;
+use App\Traits\Upload;
 
 class ContactController extends Controller
 {
+    use Upload;
+
     /**
      * Display a listing of the resource.
      */
@@ -37,18 +40,30 @@ class ContactController extends Controller
         $request->validateWithBag('contactCreation', [
             'contact_number' => ['required'],
             'contact_name' => ['required'],
+            'fileAttachment' => ['required'],
         ]);
 
         // Retrieve user details
         $user = $request->user();
 
-        $contact = Contact::create([
-            'number' => $request->contact_number,
-            'name' => $request->contact_name,
-            'user_id' => $user->id,
-        ]);
+        if ($request->hasFile('fileAttachment')) {
+            $path = $this->UploadFile($request->file('fileAttachment'), 'Contacts');
 
-        return Redirect::route('contacts.index');
+            $contact = Contact::create([
+                'number' => $request->contact_number,
+                'name' => $request->contact_name,
+                'user_id' => $user->id,
+                'file_path' => $path,
+            ]);
+    
+            return Redirect::route('contacts.index');
+
+            // Contact::create([
+            //     'path' => $path
+            // ]);
+            // return redirect()->route('files.index')->with('success', 'File Uploaded Successfully');
+            // return $path;
+        }
     }
 
     /**

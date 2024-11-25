@@ -85,7 +85,7 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): RedirectResponse
     {
         $contact = Contact::find($id);
 
@@ -127,8 +127,16 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
-        //
+        $contact = Contact::find($id);
+
+        // Deleting the old file
+        $old_path = $contact->file_path;
+        $this->deleteFile($old_path);
+
+        $contact->delete();
+    
+        return Redirect::route('contacts.index');
     }
 }

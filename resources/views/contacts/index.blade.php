@@ -24,7 +24,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach ($data as $contact)
+                        @foreach ($contacts as $contact)
                             <tr>
                                 <td>{{ $contact->number }}</td>
                                 <td>{{ $contact->name }}</td>
@@ -37,6 +37,10 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <!-- Pagination Links -->
+                    <div class="d-flex justify-content-center">
+                        {{ $contacts->links() }}
+                    </div>
                 </div>
             </div>
         </div>

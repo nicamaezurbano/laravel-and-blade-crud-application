@@ -20,8 +20,8 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $contacts = Contact::where('user_id', $user->id)->get();
-        return view('contacts.index', ['data' => $contacts]);
+        $contacts = Contact::where('user_id', $user->id)->paginate(10);
+        return view('contacts.index', compact("contacts"));
     }
 
     /**

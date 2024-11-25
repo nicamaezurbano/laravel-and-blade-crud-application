@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
     Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store');
+    Route::patch('/contacts/{contact_id}', [ContactController::class, 'update'])->name('contacts.update');
 });
 
 require __DIR__.'/auth.php';

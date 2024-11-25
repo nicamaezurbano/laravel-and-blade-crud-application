@@ -87,7 +87,41 @@ class ContactController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $contact = Contact::find($id);
+
+        if(empty($contact->file_path))
+        {
+            $request->validateWithBag('contactUpdate_'.$id.'', [
+                'contact_number' => ['required'],
+                'contact_name' => ['required'],
+                'fileAttachment' => ['required'],
+            ]);
+        }
+        else
+        {
+            $request->validateWithBag('contactUpdate_'.$id.'', [
+                'contact_number' => ['required'],
+                'contact_name' => ['required'],
+            ]);
+
+            $old_path = $contact->file_path;
+        }
+
+        if ($request->hasFile('fileAttachment')) {
+            // Deleting the old file
+            $this->deleteFile($old_path);
+
+            // Uploading the new file
+            $path = $this->UploadFile($request->file('fileAttachment'), 'Contacts');
+
+            $contact->file_path = $path;
+        }
+        
+        $contact->number = $request->contact_number;
+        $contact->name = $request->contact_name;
+        $contact->save();
+    
+        return Redirect::route('contacts.index');
     }
 
     /**

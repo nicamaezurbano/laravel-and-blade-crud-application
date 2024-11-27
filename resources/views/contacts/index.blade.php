@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
-        <div class="row">
+        <div class="row mx-0">
             <div class="col col-12 col-sm-6 col-md-4 col-lg-3">
                 <form action="{{ route('contacts.index') }}" method="get" id="form_search">
                     <x-search-field
@@ -37,14 +37,14 @@
     <div class="pt-6 pb-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <table class="table table-sm table-hover">
+                <div class="p-6 text-gray-900 dark:text-gray-100 table-responsive">
+                    <table class="table table-sm table-hover mx-auto" style="width: 1000px;">
                         <thead>
                             <tr>
-                                <th>{{ __("Contact Number") }}</th>
-                                <th>{{ __("Contact Name") }}</th>
-                                <th>{{ __("File attachment") }}</th>
-                                <th>{{ __("Action") }}</th>
+                                <th class="w-60">{{ __("Contact Number") }}</th>
+                                <th class="w-60">{{ __("Contact Name") }}</th>
+                                <th class="w-60">{{ __("File attachment") }}</th>
+                                <th class="w-60">{{ __("Action") }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,16 +61,16 @@
                         @endforeach
                         </tbody>
                     </table>
-                    <!-- Pagination Links -->
-                    <div class="flex flex-col sm:flex-row justify-between items-center">
-                        <!-- <x-pagination-show-records :lastPage="$data['contacts']->lastPage()" /> -->
-                        <x-pagination-show-records 
-                            :value="$data['record_per_page']"
-                            :searchValue="$data['search']"
-                        />
-                        
-                        {{ $data["contacts"]->links() }}
-                    </div>
+                </div>
+                <!-- Pagination Links -->
+                <div class="flex flex-col sm:flex-row justify-between items-center p-6 mx-auto" style="width: 1000px;">
+                    <!-- <x-pagination-show-records :lastPage="$data['contacts']->lastPage()" /> -->
+                    <x-pagination-show-records 
+                        :value="$data['record_per_page']"
+                        :searchValue="$data['search']"
+                    />
+                    
+                    {{ $data["contacts"]->links() }}
                 </div>
             </div>
         </div>

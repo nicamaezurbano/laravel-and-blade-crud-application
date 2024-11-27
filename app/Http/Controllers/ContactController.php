@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
 use App\Models\User;
 use App\Models\Contact;
@@ -20,8 +21,48 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $contacts = Contact::where('user_id', $user->id)->paginate(10);
-        return view('contacts.index', compact("contacts"));
+
+        if(isset($request->row))
+        {
+            $record_per_page = $request->row;
+        }
+        else
+        {
+            $record_per_page = 10;
+        }
+
+        if(isset($request->search))
+        {
+            $search = $request->search;
+        }
+        else
+        {
+            $search = "";
+            // $contacts = Contact::where('user_id', $user->id)
+            //     ->paginate($record_per_page)
+            //     ->withQueryString();
+            // $data = [
+            //     "contacts"=>$contacts,
+            // ];
+        }
+        // $lastPage = $data["contacts"]->lastPage();
+        // return $data["contacts"]->lastPage();
+
+            // return $search;
+            $contacts = Contact::where('user_id', $user->id)
+                ->where(function (Builder $query) use ($search) {
+                    $query->where('number', 'LIKE', '%' . $search . '%')
+                          ->orWhere('name', 'LIKE', '%' . $search . '%');
+                })
+                ->paginate($record_per_page)
+                ->withQueryString();
+
+            $data = [
+                "search"=>$search, 
+                "record_per_page"=>$record_per_page,
+                "contacts"=>$contacts,
+            ];
+        return view('contacts.index', compact("data"));
     }
 
     /**

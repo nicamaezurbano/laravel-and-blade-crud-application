@@ -10,7 +10,31 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="max-w-7xl mt-4 mx-auto sm:px-6 lg:px-8">
+        <div class="row">
+            <div class="col col-12 col-sm-6 col-md-4 col-lg-3">
+                <form action="{{ route('contacts.index') }}" method="get" id="form_search">
+                    <x-search-field
+                        id="search"
+                        name="search"
+                        type="text"
+                        class="mt-1 block w-full"
+                        placeholder="{{ __('Search') }}"
+                        value="{{ isset($data['search']) ? $data['search'] : '' }}"
+                    >
+                    </x-search-field>
+                    <x-text-input
+                        id="row"
+                        name="row"
+                        type="hidden"
+                        value="{{ $data['record_per_page'] }}"
+                    />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-6 pb-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
@@ -24,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach ($contacts as $contact)
+                        @foreach ($data["contacts"] as $contact)
                             <tr>
                                 <td>{{ $contact->number }}</td>
                                 <td>{{ $contact->name }}</td>
@@ -38,8 +62,14 @@
                         </tbody>
                     </table>
                     <!-- Pagination Links -->
-                    <div class="d-flex justify-content-center">
-                        {{ $contacts->links() }}
+                    <div class="flex flex-col sm:flex-row justify-between items-center">
+                        <!-- <x-pagination-show-records :lastPage="$data['contacts']->lastPage()" /> -->
+                        <x-pagination-show-records 
+                            :value="$data['record_per_page']"
+                            :searchValue="$data['search']"
+                        />
+                        
+                        {{ $data["contacts"]->links() }}
                     </div>
                 </div>
             </div>
